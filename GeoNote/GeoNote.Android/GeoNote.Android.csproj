@@ -48,6 +48,12 @@
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AndroidCommonBinding">
+      <HintPath>..\GeoNote\AndroidCommonBinding.dll</HintPath>
+    </Reference>
+    <Reference Include="AndroidTransmitterBinding">
+      <HintPath>..\GeoNote\AndroidTransmitterBinding.dll</HintPath>
+    </Reference>
     <Reference Include="FormsViewGroup, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Xamarin.Forms.2.3.4.224\lib\MonoAndroid10\FormsViewGroup.dll</HintPath>
       <Private>True</Private>
