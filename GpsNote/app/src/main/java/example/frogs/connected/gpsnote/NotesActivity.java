@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -39,7 +38,9 @@ public class NotesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // save note
-                // new SaveNote().execute();
+                Note note = new Note();
+                //note.description =
+                new SaveNote(note).execute();
             }
         });
 
@@ -72,7 +73,8 @@ public class NotesActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(Note note) {
-            // bind notes to view
+            // clear form
+            new GetNotes(note.place_id).execute();
         }
 
         private Call createCall() throws IOException {
