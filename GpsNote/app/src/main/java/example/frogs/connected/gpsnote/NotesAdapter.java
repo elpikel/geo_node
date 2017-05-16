@@ -46,6 +46,16 @@ public class NotesAdapter extends BaseAdapter {
         TextView titleTextView =
                 (TextView) rowView.findViewById(R.id.note_list_text);
 
+        Note note = (Note) getItem(position);
+
+        titleTextView.setText(note.description);
+
+        // Get title element
+        TextView userNameTextView =
+                (TextView) rowView.findViewById(R.id.note_list_user_name);
+
+        userNameTextView.setText(note.user_name);
+
         return rowView;
     }
 }
