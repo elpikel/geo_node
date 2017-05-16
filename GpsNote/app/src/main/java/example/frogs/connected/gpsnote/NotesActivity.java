@@ -38,6 +38,7 @@ public class NotesActivity extends AppCompatActivity {
 
         Bundle b = getIntent().getExtras();
         final int placeId = b.getInt("placeId");
+        final String userName = b.getString("userName");
 
         Button button = (Button) this.findViewById(R.id.add_note_to_place);
         form = (EditText) this.findViewById(R.id.note_in_place_message);
@@ -56,7 +57,7 @@ public class NotesActivity extends AppCompatActivity {
                         note.description = form.getText().toString();
                         note.latitude = (float) responseObject.getLatitude();
                         note.longitude = (float) responseObject.getLongitude();
-                        note.user_name = "user_name";
+                        note.user_name = userName;
                         note.place_id = placeId;
                         new SaveNote(note).execute();
                     }

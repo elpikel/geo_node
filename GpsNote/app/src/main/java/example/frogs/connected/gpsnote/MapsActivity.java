@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +25,7 @@ import com.hypertrack.lib.HyperTrack;
 import com.hypertrack.lib.callbacks.HyperTrackCallback;
 import com.hypertrack.lib.models.ErrorResponse;
 import com.hypertrack.lib.models.SuccessResponse;
+import com.hypertrack.lib.models.User;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
@@ -40,8 +42,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     {
         Intent intent = new Intent(this, NotesActivity.class);
         intent.putExtra("placeId", Integer.parseInt(id));
+        intent.putExtra("userName", user.getName());
         startActivity(intent);
     }
+
+    User user;
 
     private class GetPlaces extends AsyncTask<Void, Void, Place[]> {
 
@@ -92,7 +97,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Place place = places[i];
                 // Add a marker in Sydney and move the camera
                 LatLng sydney = new LatLng(place.latitude, place.longitude);
-                MarkerOptions title = new MarkerOptions().position(sydney).title(place.description);
+                MarkerOptions title = new MarkerOptions()
+                        .position(sydney)
+                        .title(place.description);
 
 
                 Marker marker = mMap.addMarker(title);
@@ -190,6 +197,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             HyperTrack.requestLocationServices(this, null);
         }
 
+        HyperTrack.createUser(UUID.randomUUID().toString(), "000000000", new HyperTrackCallback() {
+            @Override
+            public void onSuccess(@NonNull SuccessResponse successResponse) {
+                // Hide Login Button loader
+                //loginBtnLoader.setVisibility(View.GONE);
+
+                 user = (User) successResponse.getResponseObject();
+
+                // Handle createUser success here, if required
+                // HyperTrack SDK auto-configures UserId on createUser API call, so no need to call
+                // HyperTrack.setUserId() API
+
+                // On UserLogin success
+//                onUserLoginSuccess();
+            }
+
+            @Override
+            public void onError(@NonNull ErrorResponse errorResponse) {
+                // Hide Login Button loader
+
+
+            }
+        });
+
 
         //HyperTrack.initialize(this, "pk_935da9b6e1d113608f98d6de03d5079c8d791c01 ");
 
@@ -210,7 +241,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         noteWithoutPlace.description = messageForm.getText().toString();
                         noteWithoutPlace.longitude = (float)longitude;
                         noteWithoutPlace.latitude = (float)altitude;
-                        noteWithoutPlace.user_name = "user";
+                        noteWithoutPlace.user_name = user.getName();
 
 
                         (new SaveNoteWithoutPlace(noteWithoutPlace)).execute();
