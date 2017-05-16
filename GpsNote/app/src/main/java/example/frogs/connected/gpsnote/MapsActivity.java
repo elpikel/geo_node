@@ -1,5 +1,6 @@
 package example.frogs.connected.gpsnote;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -15,6 +16,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -33,6 +35,13 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private void GoToPage(String id)
+    {
+        Intent intent = new Intent(this, NotesActivity.class);
+        intent.putExtra("placeId", Integer.parseInt(id));
+        startActivity(intent);
+    }
 
     private class GetPlaces extends AsyncTask<Void, Void, Place[]> {
 
@@ -83,7 +92,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Place place = places[i];
                 // Add a marker in Sydney and move the camera
                 LatLng sydney = new LatLng(place.latitude, place.longitude);
-                mMap.addMarker(new MarkerOptions().position(sydney).title(place.description));
+                MarkerOptions title = new MarkerOptions().position(sydney).title(place.description);
+
+
+                Marker marker = mMap.addMarker(title);
+                marker.setTag(place.id);
+
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
             }
 
@@ -228,8 +242,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                GoToPage(marker.getTag().toString());
+                return true;
+            }
+        });
         (new GetPlaces()).execute();
     }
+
 
 
 
