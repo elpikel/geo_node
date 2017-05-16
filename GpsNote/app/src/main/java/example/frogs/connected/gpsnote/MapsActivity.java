@@ -17,6 +17,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 import com.hypertrack.lib.HyperTrack;
 import com.hypertrack.lib.callbacks.HyperTrackCallback;
 import com.hypertrack.lib.models.ErrorResponse;
@@ -32,6 +33,65 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private class GetPlaces extends AsyncTask<Void, Void, Place[]> {
+
+        private Call createCall() {
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+                    .url("https://young-thicket-35712.herokuapp.com/places")
+                    .build();
+
+            return client.newCall(request);
+        }
+
+        private Place[] convertToPlaces(Response response) throws IOException {
+            String stringPlaces = response.body().string();
+
+            try {
+                return new Gson().fromJson(stringPlaces, Place[].class);
+            } catch (JsonParseException e) {
+                return new Place[0];
+            }
+        }
+
+        protected Place[] doInBackground(Void... nothing) {
+
+            Call getPlacesCall = createCall();
+
+            try {
+                Response response = getPlacesCall.execute();
+
+                if(response.code() == 400) {
+                    return new Place[0];
+                }
+
+                return convertToPlaces(response);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return new Place[0];
+        }
+
+        protected void onPostExecute(Place[] places) {
+            // bind places to view
+
+            for(int i = 0; i < places.length; i++)
+            {
+                Place place = places[i];
+                // Add a marker in Sydney and move the camera
+                LatLng sydney = new LatLng(place.latitude, place.longitude);
+                mMap.addMarker(new MarkerOptions().position(sydney).title(place.description));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            }
+
+
+
+        }
+    }
+
 
     private class SaveNoteWithoutPlace extends AsyncTask<Void, Note, Note> {
         public final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -166,11 +226,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mMap = googleMap;
+        (new GetPlaces()).execute();
     }
+
+
+
 }
