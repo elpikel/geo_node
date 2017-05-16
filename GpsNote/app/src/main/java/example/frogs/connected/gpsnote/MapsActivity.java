@@ -214,6 +214,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
                         (new SaveNoteWithoutPlace(noteWithoutPlace)).execute();
+                        messageForm.setText("");
                     }
 
                     @Override

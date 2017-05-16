@@ -1,14 +1,21 @@
 package example.frogs.connected.gpsnote;
 
+import android.location.Location;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
+import com.hypertrack.lib.HyperTrack;
+import com.hypertrack.lib.callbacks.HyperTrackCallback;
+import com.hypertrack.lib.models.ErrorResponse;
+import com.hypertrack.lib.models.SuccessResponse;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
@@ -21,7 +28,7 @@ import java.io.IOException;
 public class NotesActivity extends AppCompatActivity {
 
     private ListView mListView;
-
+    private EditText form;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,17 +37,36 @@ public class NotesActivity extends AppCompatActivity {
         mListView = (ListView) findViewById(R.id.notes_list_view);
 
         Bundle b = getIntent().getExtras();
-        int placeId = b.getInt("placeId");
+        final int placeId = b.getInt("placeId");
 
         Button button = (Button) this.findViewById(R.id.add_note_to_place);
+        form = (EditText) this.findViewById(R.id.note_in_place_message);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // save note
-                Note note = new Note();
-                //note.description =
-                new SaveNote(note).execute();
+
+                HyperTrack.getCurrentLocation(new HyperTrackCallback() {
+                    @Override
+                    public void onSuccess(@NonNull SuccessResponse successResponse) {
+
+                        Location responseObject = (Location)successResponse.getResponseObject();
+                        Note note = new Note();
+                        note.description = form.getText().toString();
+                        note.latitude = (float) responseObject.getLatitude();
+                        note.longitude = (float) responseObject.getLongitude();
+                        note.user_name = "user_name";
+                        note.place_id = placeId;
+                        new SaveNote(note).execute();
+                    }
+
+                    @Override
+                    public void onError(@NonNull ErrorResponse errorResponse) {
+
+                    }
+                });
+
             }
         });
 
@@ -73,7 +99,7 @@ public class NotesActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(Note note) {
-            // clear form
+            form.setText("");
             new GetNotes(note.place_id).execute();
         }
 
