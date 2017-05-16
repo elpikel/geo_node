@@ -11,8 +11,10 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.squareup.okhttp.Call;
+import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
@@ -37,10 +39,67 @@ public class NotesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // save note
+                // new SaveNote().execute();
             }
         });
 
         new GetNotes(placeId).execute();
+    }
+
+    private class SaveNote extends AsyncTask<Void, Note, Note> {
+        public final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        private Note note;
+
+        public SaveNote(Note note) {
+            this.note = note;
+        }
+
+        @Override
+        protected Note doInBackground(Void... params) {
+            try {
+                Call registerCall = createCall();
+
+                Response response = registerCall.execute();
+
+                return convert(response);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        protected void onPostExecute(Note note) {
+            // bind notes to view
+        }
+
+        private Call createCall() throws IOException {
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+                    .url("https://young-thicket-35712.herokuapp.com/notes")
+                    .post(createRequestBody())
+                    .build();
+
+            return client.newCall(request);
+        }
+
+        private RequestBody createRequestBody() throws IOException {
+            Gson gson = new Gson();
+            try {
+                return RequestBody.create(JSON, gson.toJson(new NotePostBody(this.note)));
+            } catch (Exception e) {
+                throw new IOException("problem creating json from note");
+            }
+        }
+
+        private Note convert(Response response) throws IOException {
+            String jsonMessages = response.body().string();
+
+            return new Gson().fromJson(jsonMessages, Note.class);
+        }
     }
 
     private class GetNotes extends AsyncTask<Void, Void, Note[]> {
