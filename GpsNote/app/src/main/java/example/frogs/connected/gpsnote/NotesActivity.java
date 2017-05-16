@@ -3,6 +3,9 @@ package example.frogs.connected.gpsnote;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -27,6 +30,15 @@ public class NotesActivity extends AppCompatActivity {
 
         Bundle b = getIntent().getExtras();
         int placeId = b.getInt("placeId");
+
+        Button button = (Button) this.findViewById(R.id.add_note_to_place);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // save note
+            }
+        });
 
         new GetNotes(placeId).execute();
     }
