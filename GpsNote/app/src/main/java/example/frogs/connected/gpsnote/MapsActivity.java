@@ -274,15 +274,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
-
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(54.533280, 18.517168), 18.5f));
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
 
                 GoToPage(marker.getTag().toString());
+
                 return true;
             }
         });
+
+
         (new GetPlaces()).execute();
     }
 
