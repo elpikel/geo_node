@@ -40,7 +40,6 @@ public class SaveNoteWithoutPlace extends AsyncTask<Void, Note, Note> {
 
     protected void onPostExecute(Note note) {
         // bind notes to view
-        new GetNotes(note.place_id).execute();
     }
 
     private Call createCall() throws IOException {
