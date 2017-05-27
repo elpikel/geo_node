@@ -5,6 +5,12 @@
              xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
              x:Class="TagLife.MainPage">
     <StackLayout>
-        <maps:Map x:Name="MainMap" IsShowingUser="true"></maps:Map>
+        <maps:Map x:Name="MainMap"
+                  IsShowingUser="true"></maps:Map>
+        <Button x:Name="AddTagButton"
+                Clicked="OnAddTagClicked"
+                Text="+"
+                HorizontalOptions="CenterAndExpand" />
+        <Entry x:Name="TagDescription" />
     </StackLayout>
 </ContentPage>

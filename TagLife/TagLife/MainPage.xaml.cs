@@ -15,9 +15,9 @@ namespace TagLife
         public MainPage()
         {
             // sorry no binding pushpins to map control in forms - we'll do it later with workaround
-//            BindingContext = new MainPageViewModel();
+            //            BindingContext = new MainPageViewModel();
             InitializeComponent();
-            
+
         }
 
         protected override async void OnAppearing()
@@ -32,11 +32,30 @@ namespace TagLife
 
         private void Locator_PositionChanged(object sender, Plugin.Geolocator.Abstractions.PositionEventArgs e)
         {
-           MainMap.Pins.Add(new Pin()
-           {
-               Label = "sdfsdf",
-               Position = new Position(e.Position.Latitude, e.Position.Longitude)
-           });
+            MainMap.Pins.Add(new Pin()
+            {
+                Label = "sdfsdf",
+                Position = new Position(e.Position.Latitude, e.Position.Longitude)
+            });
+        }
+
+        private async void OnAddTagClicked(object sender, EventArgs e)
+        {
+            if (TagDescription.Text.IsNullOrWhitespace())
+                return;
+
+            var locator = CrossGeolocator.Current;
+            locator.DesiredAccuracy = 50;
+            var position = await locator.GetPositionAsync();
+            MainMap.Pins.Add(new Pin()
+            {
+                Label = TagDescription.Text,
+                Position = new Position(position.Latitude, position.Longitude)
+            });
+
+            // todo: call api
+
+            TagDescription.Text = "";
         }
     }
 }
