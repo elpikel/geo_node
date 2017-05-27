@@ -4,12 +4,7 @@
              xmlns:local="clr-namespace:TagLife"
              xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
              x:Class="TagLife.MainPage">
-<StackLayout>
-    
-
-	<Label Text="Welcome to Xamarin Forms!" 
-           VerticalOptions="Center" 
-           HorizontalOptions="Center" />
-        <maps:Map></maps:Map>
+    <StackLayout>
+        <maps:Map x:Name="MainMap" IsShowingUser="true"></maps:Map>
     </StackLayout>
 </ContentPage>
