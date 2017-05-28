@@ -32,11 +32,11 @@ namespace TagLife
 
         private void Locator_PositionChanged(object sender, Plugin.Geolocator.Abstractions.PositionEventArgs e)
         {
-            MainMap.Pins.Add(new Pin()
-            {
-                Label = "sdfsdf",
-                Position = new Position(e.Position.Latitude, e.Position.Longitude)
-            });
+//            MainMap.Pins.Add(new Pin()
+//            {
+//                Label = "sdfsdf",
+//                Position = new Position(e.Position.Latitude, e.Position.Longitude)
+//            });
         }
 
         private async void OnAddTagClicked(object sender, EventArgs e)
@@ -47,11 +47,19 @@ namespace TagLife
             var locator = CrossGeolocator.Current;
             locator.DesiredAccuracy = 50;
             var position = await locator.GetPositionAsync();
-            MainMap.Pins.Add(new Pin()
+            var item = new Pin()
             {
                 Label = TagDescription.Text,
-                Position = new Position(position.Latitude, position.Longitude)
-            });
+                Position = new Position(position.Latitude, position.Longitude),
+            };
+
+            item.Clicked += (sender1, e1) =>
+            {
+                var pin = (Pin)sender1;
+
+                Application.Current.MainPage =new NavigationPage(new LocationPage(pin.Label));
+            };
+            MainMap.Pins.Add(item);
 
             // todo: call api
 
