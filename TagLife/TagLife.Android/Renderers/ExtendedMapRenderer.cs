@@ -9,6 +9,12 @@ using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using Xamarin.Forms.Maps.Android;
 using System.Diagnostics;
+using System.IO;
+using Android.Graphics;
+using Android.Widget;
+using Java.IO;
+using Console = System.Console;
+using File = Java.IO.File;
 
 [assembly: ExportRenderer(typeof(CustomMap), typeof(ExtendedMapRenderer))]
 namespace TagLife.Droid.Renderers
@@ -90,21 +96,38 @@ namespace TagLife.Droid.Renderers
                     marker.SetPosition(new LatLng(pin.Pin.Position.Latitude, pin.Pin.Position.Longitude));
                     marker.SetTitle(pin.Pin.Label);
                     marker.SetSnippet(pin.Pin.Address);
+
+                    var inflater = Android.App.Application.Context.GetSystemService("layout_inflater") as Android.Views.LayoutInflater;
+
+
+                    var inflate = inflater.Inflate(Resource.Layout.Pinlayout, null);
+                
+                    inflate.Layout(0, 0, 1000, 1000);
+
+                    inflate.DrawingCacheEnabled = true;
+                    var drawingCache = inflate.GetDrawingCache(false);
+
+
+                    ExportBitmapAsPNG(drawingCache);
+                    marker.SetIcon(BitmapDescriptorFactory.FromBitmap(drawingCache));
+                  
                     //                    marker.SetIcon(BitmapDescriptorFactory.FromResource(Resource.Drawable.pin));
 
                     map.AddMarker(marker);
-
                 }
                // isDrawn = true;
             }
         }
 
-        //        public bool OnMarkerClick(Marker marker)
-        //        {
-        //
-        //
-        //            return true;
-        //        }
+        void ExportBitmapAsPNG(Bitmap bitmap)
+        {
+            var sdCardPath = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
+            var filePath = System.IO.Path.Combine(sdCardPath, "test.png");
+            var stream = new FileStream(filePath, FileMode.Create);
+            bitmap.Compress(Bitmap.CompressFormat.Png, 100, stream);
+            stream.Close();
+        }
+
         public bool OnMarkerClick(Marker marker)
         {
             throw new NotImplementedException();
