@@ -5,8 +5,8 @@
              xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
              x:Class="TagLife.MainPage">
     <StackLayout>
-        <maps:Map x:Name="MainMap"
-                  IsShowingUser="true"></maps:Map>
+        <local:CustomMap x:Name="MainMap"
+                  IsShowingUser="true"></local:CustomMap>
         <Button x:Name="AddTagButton"
                 Clicked="OnAddTagClicked"
                 Text="+"

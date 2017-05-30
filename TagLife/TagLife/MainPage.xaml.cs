@@ -59,7 +59,17 @@ namespace TagLife
 
                 Application.Current.MainPage =new NavigationPage(new LocationPage(pin.Label));
             };
-            MainMap.Pins.Add(item);
+            MainMap.CustomPins.Add(new CustomPin()
+            {
+                Pin = item,
+                Id = "123"
+            });
+
+//            MainMap.Pins.Add(new Pin()
+//            {
+//                Label = "sdfsfd",
+//                Position = new Position(0,0)
+//            });
 
             // todo: call api
 
