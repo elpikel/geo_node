@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="1000dp"
-    android:layout_height="1000dp"
-    android:background="#519c3f">
-  <LinearLayout 
-    android:orientation="vertical"
-    android:layout_width="1000dp"
-    android:layout_height="1000dp"
-    android:background="#ff9c3f">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#0000">
+
     <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="JOL"
         android:textColor="#ff00ff"
         android:background="#00ff00"
-        
+        android:id="@+id/jols"
         />
-  </LinearLayout>
+  <ImageView
+    android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/icon"
+    />
 </LinearLayout>

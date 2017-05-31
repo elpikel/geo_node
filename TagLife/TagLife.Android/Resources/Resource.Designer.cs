@@ -2672,6 +2672,9 @@ namespace TagLife.Droid
 			// aapt resource value: 0x7f0a0000
 			public const int item_touch_helper_previous_elevation = 2131361792;
 			
+			// aapt resource value: 0x7f0a00a3
+			public const int jols = 2131361955;
+			
 			// aapt resource value: 0x7f0a003a
 			public const int left = 2131361850;
 			
@@ -2873,8 +2876,8 @@ namespace TagLife.Droid
 			// aapt resource value: 0x7f0a001e
 			public const int showTitle = 2131361822;
 			
-			// aapt resource value: 0x7f0a00a3
-			public const int sliding_tabs = 2131361955;
+			// aapt resource value: 0x7f0a00a4
+			public const int sliding_tabs = 2131361956;
 			
 			// aapt resource value: 0x7f0a0077
 			public const int snackbar_action = 2131361911;
@@ -2936,8 +2939,8 @@ namespace TagLife.Droid
 			// aapt resource value: 0x7f0a0053
 			public const int title_template = 2131361875;
 			
-			// aapt resource value: 0x7f0a00a4
-			public const int toolbar = 2131361956;
+			// aapt resource value: 0x7f0a00a5
+			public const int toolbar = 2131361957;
 			
 			// aapt resource value: 0x7f0a003d
 			public const int top = 2131361853;

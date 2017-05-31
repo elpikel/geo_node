@@ -11,6 +11,7 @@ using Xamarin.Forms.Maps.Android;
 using System.Diagnostics;
 using System.IO;
 using Android.Graphics;
+using Android.Views;
 using Android.Widget;
 using Java.IO;
 using Console = System.Console;
@@ -102,10 +103,19 @@ namespace TagLife.Droid.Renderers
 
                     var inflate = inflater.Inflate(Resource.Layout.Pinlayout, null);
                 
-                    inflate.Layout(0, 0, 1000, 1000);
+                    
+
+                    var findViewById = inflate.FindViewById<TextView>(Resource.Id.jols);
+                    findViewById.Text = "nowyyy";
+
+                    inflate.Measure(MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified), MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified));
+
+                    inflate.Layout(0, 0, inflate.MeasuredWidth, inflate.MeasuredHeight);
+
 
                     inflate.DrawingCacheEnabled = true;
-                    var drawingCache = inflate.GetDrawingCache(false);
+                    inflate.BuildDrawingCache(true);
+                    var drawingCache = inflate.GetDrawingCache(true);
 
 
                     ExportBitmapAsPNG(drawingCache);
