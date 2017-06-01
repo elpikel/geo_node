@@ -8,23 +8,21 @@ using TagLife.Droid.Renderers;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using Xamarin.Forms.Maps.Android;
-using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Android.Graphics;
 using Android.Views;
 using Android.Widget;
-using Java.IO;
 using Console = System.Console;
-using File = Java.IO.File;
 
 [assembly: ExportRenderer(typeof(CustomMap), typeof(ExtendedMapRenderer))]
 namespace TagLife.Droid.Renderers
 {
-    public class ExtendedMapRenderer : MapRenderer, GoogleMap.IOnMarkerClickListener, IOnMapReadyCallback
+    public class ExtendedMapRenderer : MapRenderer, GoogleMap.IOnMarkerClickListener
     {
-        GoogleMap map;
-        List<CustomPin> customPins;
-        bool isDrawn;
+        private readonly List<Marker> _customPinsOnMap = new List<Marker>();
+
+        private bool _isMapInitialized;
 
         protected override void OnElementChanged(Xamarin.Forms.Platform.Android.ElementChangedEventArgs<Map> e)
         {
@@ -36,97 +34,112 @@ namespace TagLife.Droid.Renderers
 
             if (e.NewElement != null)
             {
+                // todo: unsubscribe from event
                 var formsMap = (CustomMap)e.NewElement;
-                formsMap.PropertyChanged += FormsMap_PropertyChanged;
-                //                customPins = formsMap.CustomPins;
-                ((MapView)Control).GetMapAsync(this);
+                formsMap.CustomPins.CollectionChanged += CustomPins_CollectionChanged;
             }
         }
 
-        private void FormsMap_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        public bool OnMarkerClick(Marker marker)
         {
-            System.Diagnostics.Debug.WriteLine(e.PropertyName);
+            // todo: invode marker's action
+            marker.Remove();
+            return true;
         }
 
+        private void CustomPins_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            var newPins = e.NewItems?.Cast<CustomPin>();
+            var toBeRemovedPins = e.OldItems?.Cast<CustomPin>();
 
-        //public new void OnCameraChange(CameraPosition position)
-        //{
-        //    map.Clear();
+            if (_isMapInitialized)
+            {
+                AddNewPins(newPins);
+                RemovePins(toBeRemovedPins);
+            }
+            else
+            {
+                throw new Exception("Pin changed before map initialization");
+            }
+        }
 
-        //    foreach (var pin in customPins)
-        //    {
-        //        var marker = new MarkerOptions();
-        //        marker.SetPosition(new LatLng(pin.Pin.Position.Latitude, pin.Pin.Position.Longitude));
-        //        marker.SetTitle(pin.Pin.Label);
-        //        marker.SetSnippet(pin.Pin.Address);
-        //        //                    marker.SetIcon(BitmapDescriptorFactory.FromResource(Resource.Drawable.pin));
+        private void AddNewPins(IEnumerable<CustomPin> newPins)
+        {
+            if (newPins == null)
+            {
+                return;
+            }
 
-        //        map.AddMarker(marker);
-        //    }
-        //}
+            foreach (var newItem in newPins)
+            {
+                var markerDescription = CreateMarker(newItem);
+                var markerr = NativeMap.AddMarker(markerDescription);
+                _customPinsOnMap.Add(markerr);
+            }
+        }
 
-//        public new void OnMapReady(GoogleMap googleMap)
-//        {
-////           
-//
-//            map = googleMap;
-//            map.SetOnMarkerClickListener(this);
-//            map.MyLocationEnabled = true;
-//            //                    map.SetOnCameraChangeListener(this);
-//        }
+        private void RemovePins(IEnumerable<CustomPin> toBeRemovedPins)
+        {
+            if (toBeRemovedPins == null)
+            {
+                return;
+            }
+
+            foreach (var oldItem in toBeRemovedPins)
+            {
+                // todo: verify if marker has correct equals and removes correctly
+                var marker = _customPinsOnMap.First(m => m.Snippet == oldItem.Id);
+                marker.Remove();
+                _customPinsOnMap.Remove(marker);
+            }
+        }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             base.OnElementPropertyChanged(sender, e);
 
             Console.WriteLine(e.PropertyName);
-            map = NativeMap;
 
-            if (map != null)
+            if (e.PropertyName.Equals("VisibleRegion"))
             {
-                map.SetOnMarkerClickListener(this);
-            }
-
-            if ((e.PropertyName.Equals("VisibleRegion") || e.PropertyName.Contains("Pin")) && !isDrawn && map != null)
-            {
-                map.Clear();
-
-                foreach (var pin in (sender as CustomMap).CustomPins)
+                if (NativeMap != null && !_isMapInitialized)
                 {
-                    var marker = new MarkerOptions();
-                    marker.SetPosition(new LatLng(pin.Pin.Position.Latitude, pin.Pin.Position.Longitude));
-                    marker.SetTitle(pin.Pin.Label);
-                    marker.SetSnippet(pin.Pin.Address);
-
-                    var inflater = Android.App.Application.Context.GetSystemService("layout_inflater") as Android.Views.LayoutInflater;
-
-
-                    var inflate = inflater.Inflate(Resource.Layout.Pinlayout, null);
-                
-                    
-
-                    var findViewById = inflate.FindViewById<TextView>(Resource.Id.jols);
-                    findViewById.Text = "nowyyy";
-
-                    inflate.Measure(MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified), MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified));
-
-                    inflate.Layout(0, 0, inflate.MeasuredWidth, inflate.MeasuredHeight);
-
-
-                    inflate.DrawingCacheEnabled = true;
-                    inflate.BuildDrawingCache(true);
-                    var drawingCache = inflate.GetDrawingCache(true);
-
-
-                    ExportBitmapAsPNG(drawingCache);
-                    marker.SetIcon(BitmapDescriptorFactory.FromBitmap(drawingCache));
-                  
-                    //                    marker.SetIcon(BitmapDescriptorFactory.FromResource(Resource.Drawable.pin));
-
-                    map.AddMarker(marker);
+                    NativeMap.SetOnMarkerClickListener(this);
+                    _isMapInitialized = true;
                 }
-               // isDrawn = true;
             }
+        }
+
+        private MarkerOptions CreateMarker(CustomPin pin)
+        {
+            var marker = new MarkerOptions();
+            marker.SetPosition(new LatLng(pin.Position.Latitude, pin.Position.Longitude));
+            // todo: verify if this is a fine way of saving additional data
+            marker.SetSnippet(pin.Id);
+
+            var inflater = Android.App.Application.Context.GetSystemService("layout_inflater") as Android.Views.LayoutInflater;
+
+
+            var inflate = inflater.Inflate(Resource.Layout.Pinlayout, null);
+
+
+            var findViewById = inflate.FindViewById<TextView>(Resource.Id.jols);
+            findViewById.Text = pin.Text;
+
+            inflate.Measure(MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified),
+                MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified));
+
+            inflate.Layout(0, 0, inflate.MeasuredWidth, inflate.MeasuredHeight);
+
+            // todo: optimize memory usage
+            inflate.DrawingCacheEnabled = true;
+            inflate.BuildDrawingCache(true);
+            var drawingCache = inflate.GetDrawingCache(true);
+
+
+            // ExportBitmapAsPNG(drawingCache);
+            marker.SetIcon(BitmapDescriptorFactory.FromBitmap(drawingCache));
+            return marker;
         }
 
         void ExportBitmapAsPNG(Bitmap bitmap)
@@ -136,11 +149,6 @@ namespace TagLife.Droid.Renderers
             var stream = new FileStream(filePath, FileMode.Create);
             bitmap.Compress(Bitmap.CompressFormat.Png, 100, stream);
             stream.Close();
-        }
-
-        public bool OnMarkerClick(Marker marker)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -1,11 +1,20 @@
-using Xamarin.Forms.Maps;
+
 
 namespace TagLife
 {
     public class CustomPin
     {
-        public Pin Pin { get; set; }
-        public string Id { get; set; }
-        public string Url { get; set; }
+        public CustomPin(Plugin.Geolocator.Abstractions.Position position, string id, string text)
+        {
+            Position = position;
+            Id = id;
+            Text = text;
+        }
+
+        public Plugin.Geolocator.Abstractions.Position Position { get; }
+
+        public string Id { get; }
+
+        public string Text { get; }
     }
 }

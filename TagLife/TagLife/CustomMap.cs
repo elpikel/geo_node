@@ -31,10 +31,5 @@ namespace TagLife
         {
             OnPropertyChanged(nameof(CustomPins));
         }
-
-        protected override void OnPropertyChanged(string propertyName = null)
-        {
-            base.OnPropertyChanged(propertyName);
-        }
     }
 }

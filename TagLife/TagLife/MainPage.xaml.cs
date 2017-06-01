@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Plugin.Geolocator;
+using TagLife.Extensions;
 using TagLife.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
@@ -32,46 +33,21 @@ namespace TagLife
 
         private void Locator_PositionChanged(object sender, Plugin.Geolocator.Abstractions.PositionEventArgs e)
         {
-//            MainMap.Pins.Add(new Pin()
-//            {
-//                Label = "sdfsdf",
-//                Position = new Position(e.Position.Latitude, e.Position.Longitude)
-//            });
+            MainMap.MoveToRegion(MapSpan.FromCenterAndRadius(e.Position.ToXamarinPosition(), Distance.FromKilometers(2)));
         }
 
         private async void OnAddTagClicked(object sender, EventArgs e)
         {
             if (TagDescription.Text.IsNullOrWhitespace())
+            {
                 return;
+            }
 
             var locator = CrossGeolocator.Current;
             locator.DesiredAccuracy = 50;
             var position = await locator.GetPositionAsync();
-            var item = new Pin()
-            {
-                Label = TagDescription.Text,
-                Position = new Position(position.Latitude, position.Longitude),
-            };
 
-            item.Clicked += (sender1, e1) =>
-            {
-                var pin = (Pin)sender1;
-
-                Application.Current.MainPage =new NavigationPage(new LocationPage(pin.Label));
-            };
-            MainMap.CustomPins.Add(new CustomPin()
-            {
-                Pin = item,
-                Id = "123"
-            });
-
-//            MainMap.Pins.Add(new Pin()
-//            {
-//                Label = "sdfsfd",
-//                Position = new Position(0,0)
-//            });
-
-            // todo: call api
+            MainMap.CustomPins.Add(new CustomPin(position, Guid.NewGuid().ToString(), TagDescription.Text));
 
             TagDescription.Text = "";
         }

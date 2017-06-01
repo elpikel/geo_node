@@ -41,6 +41,7 @@
     <Compile Include="Controls\ExtendedMap.cs" />
     <Compile Include="CustomMap.cs" />
     <Compile Include="CustomPin.cs" />
+    <Compile Include="Extensions\PositionExtensions.cs" />
     <Compile Include="LocationPage.xaml.cs">
       <DependentUpon>LocationPage.xaml</DependentUpon>
     </Compile>
