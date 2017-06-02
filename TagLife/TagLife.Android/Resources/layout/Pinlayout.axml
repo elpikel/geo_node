@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:text="JOL"
         android:textColor="#ffffff"
-        android:background="#95D6A0"
+        android:background="#34784D"
         android:id="@+id/jols"
         android:scrollHorizontally="false"
         android:ellipsize="none"
@@ -18,8 +18,9 @@
         android:gravity="center"
         />
   <ImageView
-    android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:src="@drawable/icon"
+      android:layout_width="10dp"
+      android:layout_height="10dp"
+      android:src="@drawable/marker"
+      android:layout_gravity="center"
     />
 </LinearLayout>
