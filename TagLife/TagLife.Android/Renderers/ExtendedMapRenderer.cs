@@ -13,6 +13,7 @@ using System.Linq;
 using Android.Graphics;
 using Android.Views;
 using Android.Widget;
+using TagLife.Droid.Services;
 using Console = System.Console;
 
 [assembly: ExportRenderer(typeof(CustomMap), typeof(ExtendedMapRenderer))]
@@ -72,7 +73,7 @@ namespace TagLife.Droid.Renderers
 
             foreach (var newItem in newPins)
             {
-                var markerDescription = CreateMarker(newItem);
+                var markerDescription = new MarkerCreator().CreateMarker(newItem);
                 var markerr = NativeMap.AddMarker(markerDescription);
                 _customPinsOnMap.Add(markerr);
             }
@@ -110,37 +111,7 @@ namespace TagLife.Droid.Renderers
             }
         }
 
-        private MarkerOptions CreateMarker(CustomPin pin)
-        {
-            var marker = new MarkerOptions();
-            marker.SetPosition(new LatLng(pin.Position.Latitude, pin.Position.Longitude));
-            // todo: verify if this is a fine way of saving additional data
-            marker.SetSnippet(pin.Id);
-
-            var inflater = Android.App.Application.Context.GetSystemService("layout_inflater") as Android.Views.LayoutInflater;
-
-
-            var inflate = inflater.Inflate(Resource.Layout.Pinlayout, null);
-
-
-            var findViewById = inflate.FindViewById<TextView>(Resource.Id.jols);
-            findViewById.Text = pin.Text;
-
-            inflate.Measure(MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified),
-                MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified));
-
-            inflate.Layout(0, 0, inflate.MeasuredWidth, inflate.MeasuredHeight);
-
-            // todo: optimize memory usage
-            inflate.DrawingCacheEnabled = true;
-            inflate.BuildDrawingCache(true);
-            var drawingCache = inflate.GetDrawingCache(true);
-
-
-            // ExportBitmapAsPNG(drawingCache);
-            marker.SetIcon(BitmapDescriptorFactory.FromBitmap(drawingCache));
-            return marker;
-        }
+        
 
         void ExportBitmapAsPNG(Bitmap bitmap)
         {
