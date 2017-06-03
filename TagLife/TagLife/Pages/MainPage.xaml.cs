@@ -14,7 +14,6 @@ namespace TagLife.Pages
             // sorry no binding pushpins to map control in forms - we'll do it later with workaround
             //            BindingContext = new MainPageViewModel();
             InitializeComponent();
-
         }
 
         protected override async void OnAppearing()
