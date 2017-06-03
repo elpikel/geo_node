@@ -3,10 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:TagLife"
              xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
-             x:Class="TagLife.MainPage">
+             xmlns:controls="clr-namespace:TagLife.Controls;assembly=TagLife"
+             x:Class="TagLife.Pages.MainPage">
     <StackLayout>
-        <local:CustomMap x:Name="MainMap"
-                  IsShowingUser="true"></local:CustomMap>
+        <controls:CustomMap x:Name="MainMap"
+                  IsShowingUser="true"></controls:CustomMap>
         <Button x:Name="AddTagButton"
                 Clicked="OnAddTagClicked"
                 Text="+"

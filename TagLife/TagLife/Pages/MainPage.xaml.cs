@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Plugin.Geolocator;
+using TagLife.Controls;
 using TagLife.Extensions;
-using TagLife.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
-namespace TagLife
+namespace TagLife.Pages
 {
     public partial class MainPage : ContentPage
     {

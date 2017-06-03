@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using PropertyChanged;
 using Xamarin.Forms.Maps;
 
-namespace TagLife
+namespace TagLife.Controls
 {
     [ImplementPropertyChanged]
     public class CustomMap : Map

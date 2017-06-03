@@ -1,6 +1,6 @@
 
 
-namespace TagLife
+namespace TagLife.Controls
 {
     public class CustomPin
     {

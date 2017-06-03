@@ -13,6 +13,7 @@ using System.Linq;
 using Android.Graphics;
 using Android.Views;
 using Android.Widget;
+using TagLife.Controls;
 using TagLife.Droid.Services;
 using Console = System.Console;
 

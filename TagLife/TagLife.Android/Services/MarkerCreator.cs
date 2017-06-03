@@ -1,6 +1,7 @@
 ﻿using Android.Gms.Maps.Model;
 using Android.Views;
 using Android.Widget;
+using TagLife.Controls;
 
 namespace TagLife.Droid.Services
 {
