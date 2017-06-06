@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
-using TagLife;
 using TagLife.Droid.Renderers;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
@@ -11,8 +10,6 @@ using Xamarin.Forms.Maps.Android;
 using System.IO;
 using System.Linq;
 using Android.Graphics;
-using Android.Views;
-using Android.Widget;
 using TagLife.Controls;
 using TagLife.Droid.Services;
 using Console = System.Console;
@@ -26,6 +23,8 @@ namespace TagLife.Droid.Renderers
 
         private bool _isMapInitialized;
 
+        private CustomMap _map;
+
         protected override void OnElementChanged(Xamarin.Forms.Platform.Android.ElementChangedEventArgs<Map> e)
         {
             base.OnElementChanged(e);
@@ -36,9 +35,7 @@ namespace TagLife.Droid.Renderers
 
             if (e.NewElement != null)
             {
-                // todo: unsubscribe from event
-                var formsMap = (CustomMap)e.NewElement;
-                formsMap.CustomPins.CollectionChanged += CustomPins_CollectionChanged;
+                _map = (CustomMap)e.NewElement;
             }
         }
 
@@ -110,9 +107,14 @@ namespace TagLife.Droid.Renderers
                     _isMapInitialized = true;
                 }
             }
-        }
 
-        
+            if (e.PropertyName.Equals(nameof(CustomMap.CustomPins)))
+            {
+                System.Diagnostics.Debug.WriteLine("We have it ;d");
+
+                var immutableList = _map.CustomPins;
+            }
+        }
 
         void ExportBitmapAsPNG(Bitmap bitmap)
         {

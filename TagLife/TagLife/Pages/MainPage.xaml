@@ -6,12 +6,11 @@
              xmlns:controls="clr-namespace:TagLife.Controls;assembly=TagLife"
              x:Class="TagLife.Pages.MainPage">
     <StackLayout>
-        <controls:CustomMap x:Name="MainMap"
-                  IsShowingUser="true"></controls:CustomMap>
-        <Button x:Name="AddTagButton"
-                Clicked="OnAddTagClicked"
+        <controls:CustomMap IsShowingUser="{Binding IsShowingUser}"
+                            CustomPins="{Binding Pins}" ></controls:CustomMap>
+        <Button Command="{Binding AddComment}"
                 Text="+"
                 HorizontalOptions="CenterAndExpand" />
-        <Entry x:Name="TagDescription" />
+        <Entry Text="{Binding Comment}" />
     </StackLayout>
 </ContentPage>

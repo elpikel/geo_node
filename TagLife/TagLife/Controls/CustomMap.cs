@@ -1,5 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Collections.ObjectModel;
+using System.Linq;
 using PropertyChanged;
+using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
 namespace TagLife.Controls
@@ -7,28 +11,23 @@ namespace TagLife.Controls
     [ImplementPropertyChanged]
     public class CustomMap : Map
     {
-        private ObservableCollection<CustomPin> _customPins = new ObservableCollection<CustomPin>();
-        public ObservableCollection<CustomPin> CustomPins
-        {
-            get
-            {
-                return _customPins;
-            }
-            set
-            {
-                _customPins = value;
-                OnPropertyChanged();
-            }
-        }
+        public static readonly BindableProperty CustomPinsProperty = BindableProperty.Create(
+             nameof(CustomPins),
+             typeof(ImmutableList<CustomPin>),
+             typeof(CustomMap),
+             ImmutableList<CustomPin>.Empty,
+             BindingMode.OneWay,
+             null,
+             (bindable, value, newValue) =>
+             {
+                 var customMap = (CustomMap) bindable;
+                 customMap.OnPropertyChanged(nameof(CustomPins));
+             });
 
-        public CustomMap()
+        public ImmutableList<CustomPin> CustomPins
         {
-            _customPins.CollectionChanged += _customPins_CollectionChanged;
-        }
-
-        private void _customPins_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            OnPropertyChanged(nameof(CustomPins));
+            get { return (ImmutableList<CustomPin>)GetValue(CustomPinsProperty); }
+            set { SetValue(CustomPinsProperty, value); }
         }
     }
 }
