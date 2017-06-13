@@ -22,11 +22,6 @@ namespace TagLife.ViewModels
 
         public string Comment { get; set; }
 
-        public MainPageViewModel()
-        {
-//            View = MapSpan.FromCenterAndRadius(new Position(), Distance.FromKilometers(9999));
-        }
-
         public async Task StartTracking()
         {
             var locator = CrossGeolocator.Current;

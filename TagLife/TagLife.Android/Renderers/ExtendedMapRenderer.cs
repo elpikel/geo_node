@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
@@ -12,6 +13,7 @@ using System.Linq;
 using Android.Graphics;
 using TagLife.Controls;
 using TagLife.Droid.Services;
+using TagLife.Helpers;
 using Console = System.Console;
 
 [assembly: ExportRenderer(typeof(CustomMap), typeof(ExtendedMapRenderer))]
@@ -20,7 +22,7 @@ namespace TagLife.Droid.Renderers
     public class ExtendedMapRenderer : MapRenderer, GoogleMap.IOnMarkerClickListener
     {
         private readonly List<Marker> _customPinsOnMap = new List<Marker>();
-
+        private ImmutableList<CustomPin> _oldCustomPins = ImmutableList<CustomPin>.Empty;
         private bool _isMapInitialized;
 
         private CustomMap _map;
@@ -46,29 +48,8 @@ namespace TagLife.Droid.Renderers
             return true;
         }
 
-        private void CustomPins_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            var newPins = e.NewItems?.Cast<CustomPin>();
-            var toBeRemovedPins = e.OldItems?.Cast<CustomPin>();
-
-            if (_isMapInitialized)
-            {
-                AddNewPins(newPins);
-                RemovePins(toBeRemovedPins);
-            }
-            else
-            {
-                throw new Exception("Pin changed before map initialization");
-            }
-        }
-
         private void AddNewPins(IEnumerable<CustomPin> newPins)
         {
-            if (newPins == null)
-            {
-                return;
-            }
-
             foreach (var newItem in newPins)
             {
                 var markerDescription = new MarkerCreator().CreateMarker(newItem);
@@ -79,14 +60,8 @@ namespace TagLife.Droid.Renderers
 
         private void RemovePins(IEnumerable<CustomPin> toBeRemovedPins)
         {
-            if (toBeRemovedPins == null)
-            {
-                return;
-            }
-
             foreach (var oldItem in toBeRemovedPins)
             {
-                // todo: verify if marker has correct equals and removes correctly
                 var marker = _customPinsOnMap.First(m => m.Snippet == oldItem.Id);
                 marker.Remove();
                 _customPinsOnMap.Remove(marker);
@@ -110,9 +85,13 @@ namespace TagLife.Droid.Renderers
 
             if (e.PropertyName.Equals(nameof(CustomMap.CustomPins)))
             {
-                System.Diagnostics.Debug.WriteLine("We have it ;d");
+                var newCustomPins = _map.CustomPins;
+                var news = _oldCustomPins.GetNews(newCustomPins);
+                var olds = _oldCustomPins.GetMissings(newCustomPins);
 
-                var immutableList = _map.CustomPins;
+                AddNewPins(news);
+                RemovePins(olds);
+                _oldCustomPins = newCustomPins;
             }
         }
 
