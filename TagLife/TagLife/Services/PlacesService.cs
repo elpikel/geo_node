@@ -2,6 +2,8 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Plugin.Geolocator.Abstractions;
+using TagLife.Controls;
 
 namespace TagLife.Services
 {
@@ -37,8 +39,20 @@ namespace TagLife.Services
 
         public float Latitude { get; set; }
 
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string Description { get; set; }
+
+        public CustomPin ToCustomPin()
+        {
+            return new CustomPin(
+               position: new Position()
+               {
+                   Latitude = Latitude,
+                   Longitude = Longitude,
+               },
+               id: Id,
+               text: Description);
+        }
     }
 }

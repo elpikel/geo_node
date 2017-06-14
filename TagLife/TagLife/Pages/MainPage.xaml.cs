@@ -26,5 +26,12 @@ namespace TagLife.Pages
 
             await _mainPageViewModel.StartTracking();
         }
+
+        protected override async void OnDisappearing()
+        {
+            base.OnDisappearing();
+
+            await _mainPageViewModel.StopTracking();
+        }
     }
 }

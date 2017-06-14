@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Plugin.Geolocator;
+using Plugin.Geolocator.Abstractions;
 using PropertyChanged;
 using TagLife.Controls;
 using TagLife.Extensions;
+using TagLife.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
@@ -14,6 +17,7 @@ namespace TagLife.ViewModels
     [ImplementPropertyChanged]
     public class MainPageViewModel
     {
+        private IGeolocator _locator;
         public ImmutableList<CustomPin> Pins { get; set; } = ImmutableList<CustomPin>.Empty;
 
 //        public MapSpan View { get; set; }
@@ -24,11 +28,17 @@ namespace TagLife.ViewModels
 
         public async Task StartTracking()
         {
-            var locator = CrossGeolocator.Current;
-            locator.DesiredAccuracy = 50;
+            IsShowingUser = true;
+            var placesService = new PlacesService();
+            var places = await placesService.GetPlaces();
+
+            Pins = places.Select(p => p.ToCustomPin()).ToImmutableList();
+
+            _locator = CrossGeolocator.Current;
+            _locator.DesiredAccuracy = 50;
             // todo: unpin
-            locator.PositionChanged += Locator_PositionChanged;
-            await locator.StartListeningAsync(1000, 10);
+            _locator.PositionChanged += Locator_PositionChanged;
+            await _locator.StartListeningAsync(1000, 10);
         }
 
         private void Locator_PositionChanged(object sender, Plugin.Geolocator.Abstractions.PositionEventArgs e)
@@ -57,6 +67,13 @@ namespace TagLife.ViewModels
                     Comment = "";
                 });
             }
+        }
+
+        public async Task StopTracking()
+        {
+            await _locator.StopListeningAsync();
+            _locator.PositionChanged -= Locator_PositionChanged;
+            IsShowingUser = false;
         }
     }
 }
