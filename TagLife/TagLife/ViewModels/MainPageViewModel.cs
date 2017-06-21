@@ -29,7 +29,7 @@ namespace TagLife.ViewModels
         public async Task StartTracking()
         {
             IsShowingUser = true;
-            var placesService = new PlacesService();
+            var placesService = new ApiService();
             var places = await placesService.GetPlaces();
 
             Pins = places.Select(p => p.ToCustomPin()).ToImmutableList();
