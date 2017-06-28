@@ -6,6 +6,10 @@
         <StackLayout>
             <Label Text="{Binding  MainText}" />
             <ListView ItemsSource="{Binding Comments}"></ListView>
+            <Button Command="{Binding AddComment}"
+                    Text="+"
+                    HorizontalOptions="CenterAndExpand" />
+            <Entry Text="{Binding Comment}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
