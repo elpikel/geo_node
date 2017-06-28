@@ -11,9 +11,9 @@ namespace TagLife.Models.Api
         public string Username { get; set; }
 
         [JsonProperty("longitude")]
-        public float Longitude { get; set; }
+        public double Longitude { get; set; }
 
         [JsonProperty("latitude")]
-        public float Latitude { get; set; }
+        public double Latitude { get; set; }
     }
 }

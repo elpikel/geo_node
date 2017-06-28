@@ -43,8 +43,8 @@ namespace TagLife.Droid.Renderers
 
         public bool OnMarkerClick(Marker marker)
         {
-            // todo: invode marker's action
-            marker.Remove();
+            var pin = _oldCustomPins.First(cp => cp.Id == marker.Snippet);
+            pin.NavigateToDetails();
             return true;
         }
 

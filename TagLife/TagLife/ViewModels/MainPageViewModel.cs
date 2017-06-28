@@ -8,9 +8,11 @@ using Plugin.Geolocator.Abstractions;
 using PropertyChanged;
 using TagLife.Controls;
 using TagLife.Extensions;
+using TagLife.Models.Api;
 using TagLife.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
+using Position = Xamarin.Forms.Maps.Position;
 
 namespace TagLife.ViewModels
 {
@@ -18,18 +20,21 @@ namespace TagLife.ViewModels
     public class MainPageViewModel
     {
         private IGeolocator _locator;
+        private readonly ApiService _placesService = new ApiService();
         public ImmutableList<CustomPin> Pins { get; set; } = ImmutableList<CustomPin>.Empty;
 
-//        public MapSpan View { get; set; }
+        //        public MapSpan View { get; set; }
 
         public bool IsShowingUser { get; set; } = true;
 
         public string Comment { get; set; }
 
+        public MapSpan Region { get; set; }
+
         public async Task StartTracking()
         {
             IsShowingUser = true;
-            var placesService = new ApiService();
+            var placesService = _placesService;
             var places = await placesService.GetPlaces();
 
             Pins = places.Select(p => p.ToCustomPin()).ToImmutableList();
@@ -37,13 +42,15 @@ namespace TagLife.ViewModels
             _locator = CrossGeolocator.Current;
             _locator.DesiredAccuracy = 50;
             // todo: unpin
-            _locator.PositionChanged += Locator_PositionChanged;
+            //   _locator.PositionChanged += Locator_PositionChanged;
             await _locator.StartListeningAsync(1000, 10);
+
+            Region = MapSpan.FromCenterAndRadius(new Position(54.37, 18.62), Distance.FromKilometers(30));
         }
 
         private void Locator_PositionChanged(object sender, Plugin.Geolocator.Abstractions.PositionEventArgs e)
         {
-//            View = MapSpan.FromCenterAndRadius(e.Position.ToXamarinPosition(), Distance.FromMeters(500));
+            //            View = MapSpan.FromCenterAndRadius(e.Position.ToXamarinPosition(), Distance.FromMeters(500));
         }
 
         public ICommand AddComment
@@ -61,9 +68,19 @@ namespace TagLife.ViewModels
 
                     var locator = CrossGeolocator.Current;
                     locator.DesiredAccuracy = 300;
+
                     var position = await locator.GetPositionAsync();
 
-                    Pins = Pins.Add(new CustomPin(position, Guid.NewGuid().ToString(), Comment));
+                    await _placesService.SendNote(new InputNote()
+                    {
+                        Description = Comment,
+                        Latitude = position.Latitude,
+                        Longitude = position.Longitude,
+                        Username = Guid.NewGuid().ToString()
+                    });
+
+                    Pins = (await _placesService.GetPlaces()).Select(p => p.ToCustomPin()).ToImmutableList();
+
                     Comment = "";
                 });
             }
@@ -72,7 +89,7 @@ namespace TagLife.ViewModels
         public async Task StopTracking()
         {
             await _locator.StopListeningAsync();
-            _locator.PositionChanged -= Locator_PositionChanged;
+            // _locator.PositionChanged -= Locator_PositionChanged;
             IsShowingUser = false;
         }
     }

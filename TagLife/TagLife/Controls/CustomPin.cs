@@ -1,5 +1,9 @@
 
 
+using System.Threading.Tasks;
+using TagLife.Pages;
+using Xamarin.Forms;
+
 namespace TagLife.Controls
 {
     public class CustomPin
@@ -33,6 +37,12 @@ namespace TagLife.Controls
         public override int GetHashCode()
         {
             return (Id != null ? Id.GetHashCode() : 0);
+        }
+
+        public void NavigateToDetails()
+        {
+            // todo: await and run synchronously
+            Application.Current.MainPage.Navigation.PushAsync(new NavigationPage(new DetailsPage(Id)));
         }
     }
 }

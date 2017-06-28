@@ -13,7 +13,7 @@ namespace TagLife
         {
             InitializeComponent();
 
-            MainPage = new Pages.MainPage();
+            MainPage = new NavigationPage(new Pages.MainPage());
         }
 
         protected override void OnStart()

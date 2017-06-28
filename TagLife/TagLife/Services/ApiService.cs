@@ -20,7 +20,7 @@ namespace TagLife.Services
 
         public async Task<List<Place>> GetPlaces()
         {
-            var places = await _httpClient.GetAsync(@"https://young-thicket-35712.herokuapp.com/places");
+            var places = await new HttpClient().GetAsync(@"https://young-thicket-35712.herokuapp.com/places");
 
             // todo: one day change it to throw correct exception
             if (!places.IsSuccessStatusCode)

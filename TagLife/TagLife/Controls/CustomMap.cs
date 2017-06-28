@@ -29,5 +29,29 @@ namespace TagLife.Controls
             get { return (ImmutableList<CustomPin>)GetValue(CustomPinsProperty); }
             set { SetValue(CustomPinsProperty, value); }
         }
+
+        public static readonly BindableProperty RegionProperty = BindableProperty.Create(
+            nameof(Region),
+            typeof(MapSpan),
+            typeof(CustomMap),
+            MapSpan.FromCenterAndRadius(new Position(54.37, 18.62), Distance.FromKilometers(30)),
+            BindingMode.OneWay,
+            null,
+            (bindable, value, newValue) =>
+            {
+                if (value == null)
+                {
+                    return;
+                }
+
+                var customMap = (CustomMap)bindable;
+                customMap.MoveToRegion((MapSpan)value);
+            });
+
+        public MapSpan Region
+        {
+            get { return (MapSpan)GetValue(CustomPinsProperty); }
+            set { SetValue(CustomPinsProperty, value); }
+        }
     }
 }
