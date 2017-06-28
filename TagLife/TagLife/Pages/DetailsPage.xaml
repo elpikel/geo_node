@@ -4,7 +4,8 @@
              x:Class="TagLife.Pages.DetailsPage">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin Forms!" />
+            <Label Text="{Binding  MainText}" />
+            <ListView ItemsSource="{Binding Comments}"></ListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

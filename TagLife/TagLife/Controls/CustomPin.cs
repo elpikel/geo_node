@@ -42,7 +42,7 @@ namespace TagLife.Controls
         public void NavigateToDetails()
         {
             // todo: await and run synchronously
-            Application.Current.MainPage.Navigation.PushAsync(new NavigationPage(new DetailsPage(Id)));
+            Application.Current.MainPage.Navigation.PushAsync(new NavigationPage(new DetailsPage(this)));
         }
     }
 }
