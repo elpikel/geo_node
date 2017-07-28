@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace TagLife.Models.Api
 {
-    public class InputNote
+    public class InputNoteWithPosition
     {
         [JsonProperty("description")]
         public string Description { get; set; }
@@ -10,10 +10,7 @@ namespace TagLife.Models.Api
         [JsonProperty("user_name")]
         public string Username { get; set; }
 
-        [JsonProperty("longitude")]
-        public double Longitude { get; set; }
-
-        [JsonProperty("latitude")]
-        public double Latitude { get; set; }
+        [JsonProperty("place_id")]
+        public int Place { get; set; }
     }
 }

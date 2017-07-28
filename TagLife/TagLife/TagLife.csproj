@@ -42,7 +42,8 @@
     <Compile Include="Controls\CustomPin.cs" />
     <Compile Include="Extensions\PositionExtensions.cs" />
     <Compile Include="Helpers\CollectionHelpers.cs" />
-    <Compile Include="Models\Api\InputNote.cs" />
+    <Compile Include="Models\Api\InputNoteWithLocation.cs" />
+    <Compile Include="Models\Api\InputNoteWithPosition.cs" />
     <Compile Include="Models\Api\Note.cs" />
     <Compile Include="Models\Api\Place.cs" />
     <Compile Include="Pages\DetailsPage.xaml.cs">

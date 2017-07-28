@@ -71,7 +71,7 @@ namespace TagLife.ViewModels
 
                     var position = await locator.GetPositionAsync();
 
-                    await _placesService.SendNote(new InputNote()
+                    await _placesService.SendNote(new InputNoteWithLocation()
                     {
                         Description = Comment,
                         Latitude = position.Latitude,

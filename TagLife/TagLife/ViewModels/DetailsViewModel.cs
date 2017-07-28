@@ -58,7 +58,7 @@ namespace TagLife.ViewModels
                         return;
                     }
 
-                    await new ApiService().SendNote(new InputNote()
+                    await new ApiService().SendNote(new InputNoteWithLocation()
                     {
                         Description = Comment,
                         Latitude = _pin.Position.Latitude,

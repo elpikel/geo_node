@@ -50,7 +50,27 @@ namespace TagLife.Services
             return JsonConvert.DeserializeObject<List<Note>>(readAsStringAsync);
         }
 
-        public async Task SendNote(InputNote inputNote)
+        public async Task SendNote(InputNoteWithLocation inputNoteWithLocation)
+        {
+            dynamic container = new
+            {
+                note = inputNoteWithLocation
+            };
+
+            var serializedPlace = JsonConvert.SerializeObject(container);
+
+            var httpResponseMessage = await
+                _httpClient.PostAsync("https://young-thicket-35712.herokuapp.com/notes",
+                    new StringContent(serializedPlace,Encoding.UTF8,"application/json"));
+
+            // todo: remember to catch no internet exceptions!
+            if (httpResponseMessage.StatusCode != HttpStatusCode.Created)
+            {
+                throw new NotImplementedException(httpResponseMessage.StatusCode.ToString());
+            }
+        }
+
+        public async Task SendNote(InputNoteWithPosition inputNote)
         {
             dynamic container = new
             {
@@ -61,7 +81,7 @@ namespace TagLife.Services
 
             var httpResponseMessage = await
                 _httpClient.PostAsync("https://young-thicket-35712.herokuapp.com/notes",
-                    new StringContent(serializedPlace,Encoding.UTF8,"application/json"));
+                    new StringContent(serializedPlace, Encoding.UTF8, "application/json"));
 
             // todo: remember to catch no internet exceptions!
             if (httpResponseMessage.StatusCode != HttpStatusCode.Created)
