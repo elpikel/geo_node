@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TagLife.Pages.DetailsPage">
+             x:Class="TagLife.Pages.DetailsPage"
+             Title="Discussion">
     <ContentPage.Content>
         <StackLayout>
             <Label Text="{Binding  MainText}" />
@@ -10,7 +11,7 @@
                     Text="+"
                     HorizontalOptions="CenterAndExpand" />
             <Entry Text="{Binding Comment}"
-                   Placeholder="Add a comment..."/>
+                   Placeholder="Add a comment..." />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

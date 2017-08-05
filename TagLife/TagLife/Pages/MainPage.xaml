@@ -4,7 +4,8 @@
              xmlns:local="clr-namespace:TagLife"
              xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
              xmlns:controls="clr-namespace:TagLife.Controls;assembly=TagLife"
-             x:Class="TagLife.Pages.MainPage">
+             x:Class="TagLife.Pages.MainPage"
+             Title="Tag Life">
     <StackLayout>
         <controls:CustomMap IsShowingUser="{Binding IsShowingUser}"
                             CustomPins="{Binding Pins}"

@@ -31,7 +31,7 @@ namespace TagLife.Controls
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((CustomPin) obj);
+            return Equals((CustomPin)obj);
         }
 
         public override int GetHashCode()
@@ -39,10 +39,10 @@ namespace TagLife.Controls
             return (Id != null ? Id.GetHashCode() : 0);
         }
 
-        public void NavigateToDetails()
+        public async void NavigateToDetails()
         {
             // todo: await and run synchronously
-            Application.Current.MainPage.Navigation.PushAsync(new NavigationPage(new DetailsPage(this)));
+            await Application.Current.MainPage.Navigation.PushAsync(new DetailsPage(this));
         }
     }
 }
