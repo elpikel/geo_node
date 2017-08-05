@@ -9,7 +9,8 @@
             <Button Command="{Binding AddComment}"
                     Text="+"
                     HorizontalOptions="CenterAndExpand" />
-            <Entry Text="{Binding Comment}" />
+            <Entry Text="{Binding Comment}"
+                   Placeholder="Add a comment..."/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

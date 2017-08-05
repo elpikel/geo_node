@@ -34,7 +34,7 @@ namespace TagLife.Controls
             nameof(Region),
             typeof(MapSpan),
             typeof(CustomMap),
-            MapSpan.FromCenterAndRadius(new Position(54.37, 18.62), Distance.FromKilometers(30)),
+            MapSpan.FromCenterAndRadius(new Position(54.37, 18.62), Distance.FromMeters(500)),
             BindingMode.OneWay,
             null,
             (bindable, value, newValue) =>
@@ -43,7 +43,6 @@ namespace TagLife.Controls
                 {
                     return;
                 }
-
                 var customMap = (CustomMap)bindable;
                 customMap.MoveToRegion((MapSpan)value);
             });

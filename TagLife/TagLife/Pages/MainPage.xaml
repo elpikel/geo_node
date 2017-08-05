@@ -8,10 +8,13 @@
     <StackLayout>
         <controls:CustomMap IsShowingUser="{Binding IsShowingUser}"
                             CustomPins="{Binding Pins}"
-                            Region="{Binding Region}" ></controls:CustomMap>
+                            Region="{Binding Region}"
+                            HasScrollEnabled="False"
+                            HasZoomEnabled="False"></controls:CustomMap>
         <Button Command="{Binding AddComment}"
                 Text="+"
                 HorizontalOptions="CenterAndExpand" />
-        <Entry Text="{Binding Comment}" />
+        <Entry Text="{Binding Comment}"
+               Placeholder="Add a tag..."/>
     </StackLayout>
 </ContentPage>

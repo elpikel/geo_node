@@ -41,16 +41,18 @@ namespace TagLife.ViewModels
 
             _locator = CrossGeolocator.Current;
             _locator.DesiredAccuracy = 50;
-            // todo: unpin
-            //   _locator.PositionChanged += Locator_PositionChanged;
+            // todo: start in onappearing
+            _locator.PositionChanged += Locator_PositionChanged;
             await _locator.StartListeningAsync(1000, 10);
 
-            Region = MapSpan.FromCenterAndRadius(new Position(54.37, 18.62), Distance.FromKilometers(30));
+//            Region = MapSpan.FromCenterAndRadius(new Position(54.37, 18.62), Distance.FromKilometers(30));
         }
 
         private void Locator_PositionChanged(object sender, Plugin.Geolocator.Abstractions.PositionEventArgs e)
         {
-            //            View = MapSpan.FromCenterAndRadius(e.Position.ToXamarinPosition(), Distance.FromMeters(500));
+
+            
+            Region = MapSpan.FromCenterAndRadius(e.Position.ToXamarinPosition(), Distance.FromMeters(500));
         }
 
         public ICommand AddComment
