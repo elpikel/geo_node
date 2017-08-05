@@ -40,7 +40,7 @@ namespace TagLife.ViewModels
             var notes = await new ApiService().GetNotes();
 
             // todo: get this from call, not using where
-            var matchingNotes = notes.Where(n => n.PlaceId == _pin.Id && n.PlaceId != _pin.Id);
+            var matchingNotes = notes.Where(n => n.PlaceId == _pin.Id);
 
             Comments = matchingNotes.Select(mn => mn.Description).ToImmutableList();
         }
@@ -58,11 +58,10 @@ namespace TagLife.ViewModels
                         return;
                     }
 
-                    await new ApiService().SendNote(new InputNoteWithLocation()
+                    await new ApiService().SendNote(new InputNoteWithPosition()
                     {
                         Description = Comment,
-                        Latitude = _pin.Position.Latitude,
-                        Longitude = _pin.Position.Longitude,
+                        Place = Convert.ToInt32(_pin.Id),
                         Username = Guid.NewGuid().ToString()
                     });
 
